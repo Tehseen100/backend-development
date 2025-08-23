@@ -25,9 +25,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, username, email, password } = req.body;
 
-  if (
-    [fullName, username, email, password].some((field) => field?.trim() === "")
-  ) {
+  if ([fullName, username, email, password].some((field) => !field?.trim())) {
     throw new apiError(400, "All fields are required");
   }
 
@@ -51,14 +49,14 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   if (!avatarLocalPath) {
-    throw new apiError(400, "Avatar file is required");
+    throw new apiError(400, "Avatar is required");
   }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
   if (!avatar) {
-    throw new apiError(400, "Avatar file is required");
+    throw new apiError(400, "Avatar is required");
   }
 
   const user = await User.create({
